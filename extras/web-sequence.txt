@@ -1,0 +1,53 @@
+title Dagger Experiment Execution Workflow
+
+User->Dagger: New Experiment
+
+Dagger -> Filesystem: Create /path/to/experiment
+
+User -> Dagger: Invoke spawn_new_tree
+Dagger->*Dagger Graph: Create new graph
+
+participant Promise
+participant New ExperimentStatePromise
+Dagger Graph->*Root Node Promise: Create new ExperimentStatePromise
+
+Root Node Promise -> User: ExperimentStatePromise with ability to define transitions
+
+
+loop For each new node in desired experiment
+    User -> Dagger: Specify Recipe parameters \nand input ExperimentStatePromise
+    
+    Dagger->Dagger Graph: Add new node to graph
+    Dagger Graph-> *New ExperimentStatePromise:
+    New ExperimentStatePromise->User: ExperimentStatePromise returned to user to be able to be used as input to future ExperimentState objects
+
+    
+end
+
+User -> Dagger: Run Experiment
+
+Dagger -> Dagger Graph: Execute dask.compute on leaf nodes of graph
+
+loop For each Promise
+    Dagger Graph -> *Promise:
+    Dagger Graph -> Filesystem: Check for already-computed
+    
+    alt Node in graph in cache
+        Filesystem->Dagger Graph: Fetch pre-computed ExperimentState
+    else Node in graph not yet computed
+        Promise->Promise: Compute ExperimentState
+        Promise->Dagger Graph: Return computed ExperimentState
+        Dagger Graph->Filesystem: Write to cache
+    end
+    destroy Promise
+end
+
+Dagger Graph -> Dagger: Done
+
+note right of Dagger Graph: After full graph execution,\nwe can destroy the scope of\nall ExperimentStatePromises,\nas well as the graph itself.
+
+destroy Dagger Graph
+destroy New ExperimentStatePromise
+destroy Root Node Promise
+
+

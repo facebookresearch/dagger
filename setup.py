@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 extras_require = {
     "visualization": ["graphviz"],
-    "tests": ["pytest", "pytest-cov"],
+    "tests": ["cytoolz", "pytest", "pytest-cov"],
 }
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 

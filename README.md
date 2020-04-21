@@ -1,6 +1,7 @@
 # `dagger`: A Python Framework for Reproducible Machine Learning Experiment Orchestration
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![GitHub Actions Status: CI](https://github.com/facebookresearch/dagger/workflows/CI/CD/badge.svg)](https://github.com/facebookresearch/dagger/actions?query=workflow%3ACI%2FCD+branch%3Amaster)
 
 `dagger` is a framework to facilitate reproducible and reusable experiment orchestration in machine learning research.
 

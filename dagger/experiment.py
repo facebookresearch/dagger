@@ -533,12 +533,8 @@ class ExperimentState:
         self.slim_loaded = False
         self.slim_sha = None
 
-        if path.exists():
+        try:
             experiment_object = self.experiment_object
-            logger.info(
-                f"State already exists at {path}! "
-                "Safely loading existing state."
-            )
 
             # Reset exp object because it gets deleted from state before
             # serialization
@@ -552,8 +548,9 @@ class ExperimentState:
             self.children = children
 
             return True
-        logger.info(f"No cached state at: {path}")
-        return False
+        except FileNotFoundError:
+            logger.info(f"No cached state at: {path}")
+            return False
 
     def deflate(self):
         """Reduce the state back to its "slim" version by deleting all its

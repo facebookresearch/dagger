@@ -5,13 +5,16 @@
 
 from setuptools import setup, find_packages
 
+extras_require = {
+    "visualization": ["graphviz"],
+    "tests": ["cytoolz", "pytest", "pytest-cov"],
+}
+extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
+
 setup(
     name="dagger",
     version="0.1.0",
     install_requires=["dill", "dask"],
     packages=find_packages(),
-    extras_require={
-        "visualization": ["graphviz"],
-        "tests": ["pytest", "pytest-cov"],
-    },
+    extras_require=extras_require,
 )
